@@ -1,0 +1,74 @@
+service: send-text-example
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-prune-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: eu-west-2
+  timeout: 10
+  memorySize: 512
+  profile: example
+
+  stackTags:
+    project: ${self:service}
+    env: ${self:custom.stage}
+
+  logs:
+    restApi: true
+
+  tracing:
+    apiGateway: true
+    lambda: true
+
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - xray:PutTraceSegments
+            - xray:PutTelemetryRecords
+            - lambda:InvokeFunction
+            - lambda:InvokeAsyncserverless
+          Resource: '*'
+
+  apiGateway:
+    apiKeys:
+      - access-api-key
+
+configValidationMode: error
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  stackname: ${self:service}-${self:custom.stage}
+  description: Serverless Typescript Boilerplate
+
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+
+  prune:
+    automatic: true
+    number: 0
+
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+    packager: 'npm'
+
+  serverless-offline:
+    useChildProcesses: true
+    httpPort: 3003
+
+functions: ${file(./config/functions.yml)}
+
+resources:
+  Description: ${self:custom.description}
+
+  Resources: ${file(./config/resources.yml)}
+  Outputs: ${file(./config/outputs.yml)}

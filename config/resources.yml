@@ -1,0 +1,51 @@
+ApiGatewayRestApi:
+  Type: AWS::ApiGateway::RestApi
+  Properties:
+    Name: ${self:custom.stackname}
+    Description: API Gateway ${self:custom.stackname}
+
+# ApiGatewayResourceSendText:
+#   Type: AWS::ApiGateway::Resource
+#   Properties:
+#     RestApiId: { Ref: 'ApiGatewayRestApi' }
+#     ParentId: { Fn::GetAtt: 'ApiGatewayRestApi.RootResourceId' }
+#     PathPart: send-text
+
+# SendTextSmsTopic:
+#   Type: AWS::SNS::Topic
+#   Properties:
+#     TopicName: SendTextSmsTopic
+
+# SendTextSmsQueue:
+#   Type: AWS::SQS::Queue
+#   Properties:
+#     QueueName: SendTextSmsQueue
+    
+# SendTextSmsQueueSqsPolicy:
+#   Type: AWS::SQS::QueuePolicy
+#   Properties:
+#     PolicyDocument:
+#       Version: "2012-10-17"
+#       Statement:
+#         - Sid: allow-sns-messages
+#           Effect: Allow
+#           Principal: "*"
+#           Resource: !GetAtt
+#             - SendTextSmsQueue
+#             - Arn
+#           Action: "SQS:SendMessage"
+#           Condition:
+#             ArnEquals:
+#               "aws:SourceArn": !Ref SendTextSmsTopic
+#     Queues:
+#       - Ref: SendTextSmsQueue
+
+# SendTextSmsQueueSubscription:
+#   Type: AWS::SNS::Subscription
+#   Properties:
+#     TopicArn: !Ref SendTextSmsTopic
+#     Endpoint: !GetAtt
+#       - SendTextSmsQueue
+#       - Arn
+#     Protocol: sqs
+#     RawMessageDelivery: true

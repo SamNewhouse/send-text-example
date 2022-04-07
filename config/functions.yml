@@ -1,0 +1,15 @@
+send-text:
+  handler: src/functions/send-text/sms.handler
+  timeout: 29
+  memorySize: 128
+  reservedConcurrency: 5
+  events:
+    - http:
+        path: /send-text
+        method: POST
+
+dispatch:
+  handler: src/functions/send-text/sqs.handler
+  events:
+    - sns:
+        arn: arn:aws:sns:eu-west-2:881434533040:send-text

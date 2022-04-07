@@ -1,0 +1,13 @@
+# project
+/.dynamodb
+/.webpack
+
+# dependencies
+/node_modules
+
+# Editor settings
+.idea
+.vscode
+
+# misc
+.DS_Store
