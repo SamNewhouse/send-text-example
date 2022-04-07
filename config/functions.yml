@@ -8,8 +8,13 @@ send-text:
         path: /send-text
         method: POST
 
+# TODO: Add SNS:Publish permissions to send-text
+
 dispatch:
   handler: src/functions/send-text/sqs.handler
   events:
-    - sns:
-        arn: arn:aws:sns:eu-west-2:881434533040:send-text
+    - sqs:
+        arn:
+          Fn::GetAtt:
+            - SendTextSmsQueue
+            - Arn

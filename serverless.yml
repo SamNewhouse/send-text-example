@@ -35,6 +35,7 @@ provider:
             - xray:PutTelemetryRecords
             - lambda:InvokeFunction
             - lambda:InvokeAsyncserverless
+            - SNS:Publish
           Resource: '*'
 
   apiGateway:
